@@ -14,6 +14,6 @@ namespace PixAPI.Repository.Entities
         public DateTime dataInclusao { get; set; }
         public DateTime? dataAlteracao { get; set; }
         public DateTime? dataExclusao { get; set; }
-        public bool? isExcluido { get; set; }
+        public bool isExcluido { get; set; }
     }
 }

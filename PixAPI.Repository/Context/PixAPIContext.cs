@@ -3,9 +3,9 @@ using PixAPI.Repository.Entities;
 
 namespace PixAPI.Repository.Context
 {
-    public class ChavePixContext : DbContext
+    public class PixAPIContext : DbContext
     {
-        public ChavePixContext(DbContextOptions<ChavePixContext> options) 
+        public PixAPIContext(DbContextOptions<PixAPIContext> options) 
             : base(options)
         {
         }

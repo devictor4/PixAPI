@@ -14,12 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\PixAPI.Business\PixAPI.Business.csproj" />
+    <ProjectReference Include="..\PixAPI.Repository\PixAPI.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PixAPI.Business\PixAPI.Business.csproj" />
-    <ProjectReference Include="..\PixAPI.Repository\PixAPI.Repository.csproj" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
