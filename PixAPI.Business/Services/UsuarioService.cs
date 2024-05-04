@@ -15,7 +15,8 @@ namespace PixAPI.Business.Services
         }
 
         public List<UsuarioDTO>? Listar() =>
-            _pixAPIContext.Usuario.Select(e => new UsuarioDTO(e)).ToList();
+            _pixAPIContext.Usuario
+                .Select(e => new UsuarioDTO(e)).ToList();
 
         public UsuarioDTO? BuscarPeloDocumento(TipoDocumento tipoDocumento, long documento) =>
             _pixAPIContext.Usuario.Where(e => e.tipoDocumento == tipoDocumento.GetHashCode()
@@ -28,8 +29,8 @@ namespace PixAPI.Business.Services
             try
             {
                 if ((!usuarioDTO.TipoDocumento.HasValue
-                && !usuarioDTO.Documento.HasValue)
-                || usuarioDTO.Documento == 0) throw new Exception("Necessário informar o documento.");
+                    && !usuarioDTO.Documento.HasValue)
+                    || usuarioDTO.Documento == 0) throw new Exception("Necessário informar o documento.");
 
                 Usuario? usuario = _pixAPIContext.Usuario
                     .FirstOrDefault(e => e.tipoDocumento == usuarioDTO.TipoDocumento.GetHashCode()
@@ -48,7 +49,7 @@ namespace PixAPI.Business.Services
                 }
                 else
                 {
-                    usuario.tipoDocumento = (byte)usuarioDTO?.TipoDocumento?.GetHashCode();
+                    usuario.tipoDocumento = Convert.ToByte(usuarioDTO?.TipoDocumento?.GetHashCode());
                     usuario.documento = usuarioDTO?.Documento ?? 0;
                     usuario.nome = usuarioDTO?.Nome ?? "";
                     usuario.telefone = usuarioDTO?.Telefone;

@@ -12,7 +12,7 @@ namespace PixAPI
             Settings.IS_DESENV = builder.Configuration["Ambiente"] == "2";
 
             builder.Services.AddDbContext<PixAPIContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("HydrosistemConnectionString")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("PixAPIConnectionString")));
 
             builder.Services.AddScoped<UsuarioService>();
 
