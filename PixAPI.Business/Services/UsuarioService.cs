@@ -1,4 +1,5 @@
 ﻿using PixAPI.Business.DTOs;
+using PixAPI.Business.Exceptions;
 using PixAPI.Repository.Context;
 using PixAPI.Repository.Entities;
 using static PixAPI.Business.Util.Enumerators;
@@ -14,9 +15,24 @@ namespace PixAPI.Business.Services
             _pixAPIContext = pixAPIContext;
         }
 
-        public List<UsuarioDTO>? Listar() =>
-            _pixAPIContext.Usuario
-                .Select(e => new UsuarioDTO(e)).ToList();
+        public List<UsuarioDTO>? Listar()
+        {
+            List<UsuarioDTO>? usuarios = new();
+            try
+            {
+                usuarios = _pixAPIContext.Usuario
+                    .Select(e => new UsuarioDTO(e)).ToList();
+
+                if(!usuarios.Any()) 
+                    throw new BadRequestException("Não foram encontrados usuários.");
+            } 
+            catch (Exception e)
+            {
+                throw;
+            }
+
+            return usuarios;
+        }
 
         public UsuarioDTO? BuscarPeloDocumento(TipoDocumento tipoDocumento, long documento) =>
             _pixAPIContext.Usuario.Where(e => e.tipoDocumento == tipoDocumento.GetHashCode()
@@ -30,7 +46,7 @@ namespace PixAPI.Business.Services
             {
                 if ((!usuarioDTO.TipoDocumento.HasValue
                     && !usuarioDTO.Documento.HasValue)
-                    || usuarioDTO.Documento == 0) throw new Exception("Necessário informar o documento.");
+                    || usuarioDTO.Documento == 0) throw new BadRequestException("Necessário informar o documento.");
 
                 Usuario? usuario = _pixAPIContext.Usuario
                     .FirstOrDefault(e => e.tipoDocumento == usuarioDTO.TipoDocumento.GetHashCode()
@@ -67,17 +83,25 @@ namespace PixAPI.Business.Services
             }
         }
 
-        public void DesativarPeloDocumento(TipoDocumento tipoDocumento, long documento)
+        public void AtivarDesativarPeloDocumento(TipoDocumento tipoDocumento, long documento)
         {
             try
             {
                 Usuario? usuario = _pixAPIContext.Usuario
                      .FirstOrDefault(e => e.tipoDocumento == tipoDocumento.GetHashCode()
-                         && e.documento == documento
-                         && (!e.isExcluido)) ?? throw new Exception("Usuário não encontrado.");
+                         && e.documento == documento) 
+                     ?? throw new BadRequestException("Usuário não encontrado.");
 
-                usuario.dataExclusao = DateTime.Now;
-                usuario.isExcluido = true;
+                if(usuario.isExcluido)
+                {
+                    usuario.dataAlteracao = DateTime.Now;
+                    usuario.isExcluido = false;
+                }
+                else
+                {
+                    usuario.dataExclusao = DateTime.Now;
+                    usuario.isExcluido = true;
+                }
 
                 _pixAPIContext.Update(usuario);
                 _pixAPIContext.SaveChanges();

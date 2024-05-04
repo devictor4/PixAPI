@@ -16,7 +16,6 @@ namespace PixAPI.Controllers
 
         [HttpGet]
         public IActionResult Listar() =>
-            Ok(_usuarioService.Listar()
-                ?? throw new BadRequestException("Não foram encontrados usuários."));
+            Ok(new { usuarios = _usuarioService.Listar() });
     }
 }
