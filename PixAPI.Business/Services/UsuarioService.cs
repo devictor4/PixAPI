@@ -15,7 +15,7 @@ namespace PixAPI.Business.Services
             _pixAPIContext = pixAPIContext;
         }
 
-        public List<UsuarioDTO>? Listar()
+        public List<UsuarioDTO>? ListarTodos()
         {
             List<UsuarioDTO>? usuarios = new();
             try
@@ -23,9 +23,9 @@ namespace PixAPI.Business.Services
                 usuarios = _pixAPIContext.Usuario
                     .Select(e => new UsuarioDTO(e)).ToList();
 
-                if(!usuarios.Any()) 
+                if (!usuarios.Any())
                     throw new BadRequestException("Não foram encontrados usuários.");
-            } 
+            }
             catch (Exception e)
             {
                 throw;
@@ -34,48 +34,55 @@ namespace PixAPI.Business.Services
             return usuarios;
         }
 
-        public UsuarioDTO? BuscarPeloDocumento(TipoDocumento tipoDocumento, long documento) =>
+        public UsuarioDTO? BuscarAtivosPeloDocumento(TipoDocumento? tipoDocumento, long? documento) =>
             _pixAPIContext.Usuario.Where(e => e.tipoDocumento == tipoDocumento.GetHashCode()
                 && e.documento == documento
                 && (!e.isExcluido))
-            .Select(e => new UsuarioDTO(e)).FirstOrDefault();
+            .Select(e => new UsuarioDTO(e)).FirstOrDefault() 
+                ?? throw new BadRequestException("Usuário não encontrado.");
 
-        public void CadastrarOuAtualizar(UsuarioDTO? usuarioDTO)
+        public UsuarioDTO CadastrarOuAtualizar(TipoDocumento? tipoDocumento,
+            long? documento, string? nome, long? telefone, string? email)
         {
             try
             {
-                if ((!usuarioDTO.TipoDocumento.HasValue
-                    && !usuarioDTO.Documento.HasValue)
-                    || usuarioDTO.Documento == 0) throw new BadRequestException("Necessário informar o documento.");
+                if ((tipoDocumento is null && documento is null) || documento is 0)
+                    throw new BadRequestException("Necessário informar o documento.");
 
-                Usuario? usuario = _pixAPIContext.Usuario
-                    .FirstOrDefault(e => e.tipoDocumento == usuarioDTO.TipoDocumento.GetHashCode()
-                    && e.documento == usuarioDTO.Documento
-                    && (!e.isExcluido));
+                UsuarioDTO? usuarioDTO = _pixAPIContext.Usuario
+                    .Where(e => e.tipoDocumento == tipoDocumento.GetHashCode()
+                        && e.documento == documento)
+                    .Select(e => new UsuarioDTO(e)).FirstOrDefault();
 
-                if (usuario != null)
+                Usuario usuario = new();
+
+                if (usuarioDTO != null)
                 {
-                    usuario.nome = usuarioDTO?.Nome ?? "";
-                    usuario.telefone = usuarioDTO?.Telefone;
-                    usuario.email = usuarioDTO?.Email ?? "";
+                    usuario.nome = nome ?? usuarioDTO?.Nome;
+                    usuario.telefone = telefone ?? usuarioDTO?.Telefone;
+                    usuario.email = email ?? usuarioDTO?.Email;
+                    usuario.dataInclusao = usuarioDTO.DataInclusao;
                     usuario.dataAlteracao = DateTime.Now;
+                    usuario.isExcluido = false;
 
                     _pixAPIContext.Update(usuario);
-                    _pixAPIContext.SaveChanges();
                 }
                 else
                 {
-                    usuario.tipoDocumento = Convert.ToByte(usuarioDTO?.TipoDocumento?.GetHashCode());
-                    usuario.documento = usuarioDTO?.Documento ?? 0;
-                    usuario.nome = usuarioDTO?.Nome ?? "";
-                    usuario.telefone = usuarioDTO?.Telefone;
-                    usuario.email = usuarioDTO?.Email ?? "";
+                    usuario.tipoDocumento = tipoDocumento.GetHashCode();
+                    usuario.documento = documento ?? 0;
+                    usuario.nome = nome ?? "";
+                    usuario.telefone = telefone;
+                    usuario.email = email ?? "";
                     usuario.dataInclusao = DateTime.Now;
                     usuario.isExcluido = false;
 
                     _pixAPIContext.Add(usuario);
-                    _pixAPIContext.SaveChanges();
                 }
+
+                _pixAPIContext.SaveChanges();
+
+                return new(usuario);
             }
             catch (Exception e)
             {
@@ -83,25 +90,17 @@ namespace PixAPI.Business.Services
             }
         }
 
-        public void AtivarDesativarPeloDocumento(TipoDocumento tipoDocumento, long documento)
+        public void DesativarPeloDocumento(TipoDocumento tipoDocumento, long documento)
         {
             try
             {
                 Usuario? usuario = _pixAPIContext.Usuario
                      .FirstOrDefault(e => e.tipoDocumento == tipoDocumento.GetHashCode()
-                         && e.documento == documento) 
+                         && e.documento == documento)
                      ?? throw new BadRequestException("Usuário não encontrado.");
 
-                if(usuario.isExcluido)
-                {
-                    usuario.dataAlteracao = DateTime.Now;
-                    usuario.isExcluido = false;
-                }
-                else
-                {
-                    usuario.dataExclusao = DateTime.Now;
-                    usuario.isExcluido = true;
-                }
+                usuario.dataExclusao = DateTime.Now;
+                usuario.isExcluido = true;
 
                 _pixAPIContext.Update(usuario);
                 _pixAPIContext.SaveChanges();

@@ -6,10 +6,11 @@ namespace PixAPI.Business.DTOs
     public class UsuarioDTO
     {
         public string? Nome { get; set; }
-        public TipoDocumento? TipoDocumento { get; set; }
-        public long? Documento { get; set; }
+        public TipoDocumento TipoDocumento { get; set; }
+        public long Documento { get; set; }
         public string? Email { get; set; }
         public long? Telefone { get; set; }
+        public DateTime DataInclusao { get; set; }
 
         public UsuarioDTO()
         {
@@ -19,10 +20,11 @@ namespace PixAPI.Business.DTOs
         public UsuarioDTO(Usuario? usuario)
         {
             Nome = usuario?.nome ?? "";
-            TipoDocumento = (TipoDocumento?)usuario?.tipoDocumento;
-            Documento = usuario?.documento;
+            TipoDocumento = (TipoDocumento)usuario?.tipoDocumento;
+            Documento = usuario.documento;
             Email = usuario?.email;
             Telefone = usuario?.telefone;
+            DataInclusao = usuario.dataInclusao;
         }
     }
 }

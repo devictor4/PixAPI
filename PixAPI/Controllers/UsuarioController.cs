@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PixAPI.Business.DTOs;
 using PixAPI.Business.Exceptions;
+using PixAPI.Business.Models;
 using PixAPI.Business.Services;
+using static PixAPI.Business.Util.Enumerators;
 
 namespace PixAPI.Controllers
 {
@@ -15,7 +18,21 @@ namespace PixAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Listar() =>
-            Ok(new { usuarios = _usuarioService.Listar() });
+        public IActionResult ListarTodos() =>
+            Ok(new { usuarios = _usuarioService.ListarTodos() });
+
+        [HttpGet]
+        [Route("{tipoDocumento}/{documento}")]
+        public IActionResult BuscarPeloDocumento(TipoDocumento tipoDocumento, long documento) =>
+            Ok(new { usuario = _usuarioService.BuscarAtivosPeloDocumento(tipoDocumento, documento) });
+
+        [HttpPost]
+        public IActionResult CadastrarOuAtualizar(
+            [FromBody] CadastrarOuAtualizarModel model) =>
+            Ok(new
+            {
+                usuario = _usuarioService.CadastrarOuAtualizar(
+                    model.TipoDocumento, model.Documento, model.Nome, model.Telefone, model.Email)
+            });
     }
 }
