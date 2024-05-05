@@ -18,13 +18,13 @@ namespace PixAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListarTodos() =>
-            Ok(new { usuarios = _usuarioService.ListarTodos() });
+        public IActionResult ListarTodosAtivos() =>
+            Ok(new { usuarios = _usuarioService.ListarTodosAtivos() });
 
         [HttpGet]
         [Route("{tipoDocumento}/{documento}")]
-        public IActionResult BuscarPeloDocumento(TipoDocumento tipoDocumento, long documento) =>
-            Ok(new { usuario = _usuarioService.BuscarAtivosPeloDocumento(tipoDocumento, documento) });
+        public IActionResult BuscarAtivoPeloDocumento(TipoDocumento tipoDocumento, long documento) =>
+            Ok(new { usuario = _usuarioService.BuscarAtivoPeloDocumento(tipoDocumento, documento) });
 
         [HttpPost]
         public IActionResult CadastrarOuAtualizar(
@@ -34,5 +34,10 @@ namespace PixAPI.Controllers
                 usuario = _usuarioService.CadastrarOuAtualizar(
                     model.TipoDocumento, model.Documento, model.Nome, model.Telefone, model.Email)
             });
+
+        [HttpDelete]
+        [Route("{tipoDocumento}/{documento}")]
+        public IActionResult DesativarPeloDocumento(TipoDocumento tipoDocumento, long documento) =>
+            Ok(new { usuario = _usuarioService.DesativarPeloDocumento(tipoDocumento, documento) } );
     }
 }
