@@ -5,6 +5,6 @@ namespace PixAPI.Business.Models
     public class DocumentoModel
     {
         public TipoDocumento TipoDocumento { get; set; }
-        public long Documento { get; set; }
+        public string Documento { get; set; }
     }
 }

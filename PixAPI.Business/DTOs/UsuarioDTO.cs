@@ -7,7 +7,7 @@ namespace PixAPI.Business.DTOs
     {
         public string? Nome { get; set; }
         public TipoDocumento TipoDocumento { get; set; }
-        public long Documento { get; set; }
+        public string Documento { get; set; }
         public string? Email { get; set; }
         public long? Telefone { get; set; }
         public DateTime DataInclusao { get; set; }

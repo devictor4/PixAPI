@@ -8,7 +8,7 @@ namespace PixAPI.Repository.Entities
         public long id { get; set; }
         public string nome { get; set; }
         public int tipoDocumento { get; set; }
-        public long documento { get; set; }
+        public string documento { get; set; }
         public string? email { get; set; }
         public long? telefone { get; set; }
         public DateTime dataInclusao { get; set; }

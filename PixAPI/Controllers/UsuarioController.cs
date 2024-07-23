@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PixAPI.Business.DTOs;
-using PixAPI.Business.Exceptions;
 using PixAPI.Business.Models;
 using PixAPI.Business.Services;
 using static PixAPI.Business.Util.Enumerators;
@@ -23,7 +21,7 @@ namespace PixAPI.Controllers
 
         [HttpGet]
         [Route("{tipoDocumento}/{documento}")]
-        public IActionResult BuscarAtivoPeloDocumento(TipoDocumento tipoDocumento, long documento) =>
+        public IActionResult BuscarAtivoPeloDocumento(TipoDocumento tipoDocumento, string documento) =>
             Ok(new { usuario = _usuarioService.BuscarAtivoPeloDocumento(tipoDocumento, documento) });
 
         [HttpPost]
@@ -37,7 +35,7 @@ namespace PixAPI.Controllers
 
         [HttpDelete]
         [Route("{tipoDocumento}/{documento}")]
-        public IActionResult DesativarPeloDocumento(TipoDocumento tipoDocumento, long documento) =>
+        public IActionResult DesativarPeloDocumento(TipoDocumento tipoDocumento, string documento) =>
             Ok(new { usuario = _usuarioService.DesativarPeloDocumento(tipoDocumento, documento) } );
     }
 }

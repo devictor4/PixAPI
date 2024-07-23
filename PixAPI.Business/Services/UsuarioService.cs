@@ -35,24 +35,24 @@ namespace PixAPI.Business.Services
             return usuarios;
         }
 
-        public UsuarioDTO? BuscarAtivoPeloDocumento(TipoDocumento? tipoDocumento, long? documento) =>
+        public UsuarioDTO? BuscarAtivoPeloDocumento(TipoDocumento? tipoDocumento, string? documento) =>
             _pixAPIContext.Usuario.Where(e => e.tipoDocumento == tipoDocumento.GetHashCode()
-                && e.documento == documento
+                && e.documento.Equals(documento)
                 && (!e.isExcluido))
             .Select(e => new UsuarioDTO(e)).FirstOrDefault() 
                 ?? throw new BadRequestException("Usuário não encontrado.");
 
-        public UsuarioDTO CadastrarOuAtualizar(TipoDocumento? tipoDocumento,
-            long? documento, string? nome, long? telefone, string? email)
+        public UsuarioDTO CadastrarOuAtualizar(TipoDocumento tipoDocumento,
+            string documento, string? nome, long? telefone, string? email)
         {
             try
             {
-                if ((tipoDocumento is null && documento is null) || documento is 0)
+                if (string.IsNullOrWhiteSpace(documento))
                     throw new BadRequestException("Documento obrigatório.");
 
                 Usuario? usuario = _pixAPIContext.Usuario
                     .FirstOrDefault(e => e.tipoDocumento == tipoDocumento.GetHashCode()
-                        && e.documento == documento);
+                        && e.documento.Equals(documento));
 
                 if (usuario != null)
                 {
@@ -69,7 +69,7 @@ namespace PixAPI.Business.Services
                     usuario = new()
                     {
                         tipoDocumento = tipoDocumento.GetHashCode(),
-                        documento = documento ?? 0,
+                        documento = documento,
                         nome = !string.IsNullOrWhiteSpace(nome)
                             ? nome : throw new BadRequestException("Nome obrigatório."),
                         telefone = telefone,
@@ -91,13 +91,13 @@ namespace PixAPI.Business.Services
             }
         }
 
-        public Usuario DesativarPeloDocumento(TipoDocumento tipoDocumento, long documento)
+        public Usuario DesativarPeloDocumento(TipoDocumento tipoDocumento, string documento)
         {
             try
             {
                 Usuario? usuario = _pixAPIContext.Usuario
                      .FirstOrDefault(e => e.tipoDocumento == tipoDocumento.GetHashCode()
-                         && e.documento == documento
+                         && e.documento.Equals(documento)
                          && (!e.isExcluido))
                      ?? throw new BadRequestException("Usuário não encontrado.");
 
