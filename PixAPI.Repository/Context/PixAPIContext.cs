@@ -13,6 +13,7 @@ namespace PixAPI.Repository.Context
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<ChavePix> ChavePix { get; set; }
         public DbSet<UsuarioChavePix> UsuarioChavePix { get; set; }
+        public DbSet<TipoChavePix> TipoChavePix { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -2,11 +2,10 @@
 
 namespace PixAPI.Repository.Entities
 {
-    public class ChavePix
+    public class TipoChavePix
     {
         [Key]
         public long id { get; set; }
-        public long idTipo { get; set; }
-        public string chave { get; set; }
+        public string tipo { get; set; }
     }
 }
