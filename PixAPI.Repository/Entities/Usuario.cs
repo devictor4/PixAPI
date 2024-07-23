@@ -6,11 +6,13 @@ namespace PixAPI.Repository.Entities
     {
         [Key]
         public long id { get; set; }
+        public string email { get; set; }
+        public string senha { get; set; }
         public string nome { get; set; }
         public int tipoDocumento { get; set; }
         public string documento { get; set; }
-        public string? email { get; set; }
-        public long? telefone { get; set; }
+        public short dddCelular { get; set; }
+        public long celular { get; set; }
         public DateTime dataInclusao { get; set; }
         public DateTime? dataAlteracao { get; set; }
         public DateTime? dataExclusao { get; set; }

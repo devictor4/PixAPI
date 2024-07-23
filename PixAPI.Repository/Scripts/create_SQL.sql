@@ -1,11 +1,13 @@
 create table Usuario 
 (
 	id bigint primary key identity(1, 1) not null,
+	email varchar(50) not null,
+	senha varchar(100) not null,
 	nome varchar(50) not null,
 	tipoDocumento int not null,
 	documento varchar(14) not null,
-	email varchar(50) null,
-	telefone bigint null,
+	dddCelular smallint not null,
+	celular bigint not null,
 	dataInclusao datetime not null,
 	dataAlteracao datetime null,
 	dataExclusao datetime null,
@@ -36,8 +38,4 @@ create table UsuarioChavePix
 	foreign key (idUsuario) references Usuario(id),
 	foreign key (idChavePix) references ChavePix(id)
 )
-
-
-
-
 

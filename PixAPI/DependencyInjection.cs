@@ -14,7 +14,11 @@ namespace PixAPI
             builder.Services.AddDbContext<PixAPIContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("PixAPIConnectionString")));
 
+            #region Services
+            builder.Services.AddScoped<LoginService>();
+            //builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<UsuarioService>();
+            #endregion
 
             return builder;
         }

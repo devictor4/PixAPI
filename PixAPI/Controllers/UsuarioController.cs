@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PixAPI.Business.Models;
+using PixAPI.Business.Models.Usuario;
 using PixAPI.Business.Services;
-using static PixAPI.Business.Util.Enumerators;
 
 namespace PixAPI.Controllers
 {
@@ -16,26 +15,35 @@ namespace PixAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListarTodosAtivos() =>
-            Ok(new { usuarios = _usuarioService.ListarTodosAtivos() });
+        public IActionResult ListarAtivos() =>
+            Ok(new { usuarios = _usuarioService.ListarAtivos() });
 
         [HttpGet]
-        [Route("{tipoDocumento}/{documento}")]
-        public IActionResult BuscarAtivoPeloDocumento(TipoDocumento tipoDocumento, string documento) =>
-            Ok(new { usuario = _usuarioService.BuscarAtivoPeloDocumento(tipoDocumento, documento) });
+        [Route("{id}")]
+        public IActionResult BuscarAtivoPeloId(long id) =>
+            Ok(new { usuario = _usuarioService.BuscarAtivoPeloId(id) });
 
         [HttpPost]
-        public IActionResult CadastrarOuAtualizar(
-            [FromBody] CadastrarOuAtualizarModel model) =>
+        public IActionResult Cadastrar(
+            [FromBody] CadastroModel model) =>
             Ok(new
             {
-                usuario = _usuarioService.CadastrarOuAtualizar(
-                    model.TipoDocumento, model.Documento, model.Nome, model.Telefone, model.Email)
+                usuario = _usuarioService.Cadastrar(model.TipoDocumento, model.Documento, 
+                    model.Email, model.Senha, model.Nome, model.DDDCelular, model.Celular)
+            });
+
+        [HttpPut]
+        public IActionResult Alterar(
+            [FromBody] AlteracaoModel model) =>
+            Ok(new
+            {
+                usuario = _usuarioService.Alterar(model.TipoDocumento, model.Documento,
+                    model?.Email, model?.Nome,  model?.DDDCelular, model?.Celular)
             });
 
         [HttpDelete]
-        [Route("{tipoDocumento}/{documento}")]
-        public IActionResult DesativarPeloDocumento(TipoDocumento tipoDocumento, string documento) =>
-            Ok(new { usuario = _usuarioService.DesativarPeloDocumento(tipoDocumento, documento) } );
+        [Route("{id}")]
+        public IActionResult DesativarPeloid(long id) =>
+            Ok(new { usuario = _usuarioService.DesativarPeloId(id) } );
     }
 }
