@@ -1,7 +1,7 @@
 ﻿using PixAPI.Repository.Entities;
 using static PixAPI.Business.Util.Enumerators;
 
-namespace PixAPI.Business.DTOs
+namespace PixAPI.Business.DTOs.Usuarios
 {
     public class UsuarioDTO
     {
@@ -19,7 +19,7 @@ namespace PixAPI.Business.DTOs
 
         public UsuarioDTO()
         {
-            
+
         }
 
         public UsuarioDTO(Usuario usuario)

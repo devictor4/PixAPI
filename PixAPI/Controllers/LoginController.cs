@@ -17,9 +17,6 @@ namespace PixAPI.Controllers
         [HttpPost]
         public IActionResult Login(
             [FromBody] LoginModel model) =>
-            Ok(new
-            {
-                Token = _loginService.Login(model.Email, model.Documento, model.Senha)
-            });
+            Ok(_loginService.Login(model.Email, model.Documento, model.Senha));
     }
 }

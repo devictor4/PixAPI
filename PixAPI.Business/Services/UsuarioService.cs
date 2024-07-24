@@ -1,4 +1,4 @@
-﻿using PixAPI.Business.DTOs;
+﻿using PixAPI.Business.DTOs.Usuarios;
 using PixAPI.Business.Exceptions;
 using PixAPI.Repository.Context;
 using PixAPI.Repository.Entities;
@@ -38,7 +38,7 @@ namespace PixAPI.Business.Services
         public UsuarioDTO? BuscarAtivoPeloId(long id) =>
             _pixAPIContext.Usuario.Where(e => e.id == id && (!e.isExcluido))
             .Select(e => new UsuarioDTO(e)).FirstOrDefault() 
-                ?? throw new BadRequestException("Usuário não encontrado.");
+            ?? throw new BadRequestException("Usuário não encontrado.");
 
         public UsuarioDTO Cadastrar(TipoDocumento tipoDocumento, string documento,
             string email, string senha, string nome, short dddCelular, long celular)
@@ -89,7 +89,7 @@ namespace PixAPI.Business.Services
                 Usuario? usuario = _pixAPIContext.Usuario
                     .FirstOrDefault(e => e.tipoDocumento == tipoDocumento.GetHashCode()
                         && e.documento.Equals(documento))
-                            ?? throw new BadRequestException("Usuário não encontrado.");
+                    ?? throw new BadRequestException("Usuário não encontrado.");
 
                 usuario.email = !string.IsNullOrWhiteSpace(email) ? email : usuario.email;
                 usuario.nome = !string.IsNullOrWhiteSpace(nome) ? nome : usuario.nome;
@@ -115,7 +115,7 @@ namespace PixAPI.Business.Services
             {
                 Usuario? usuario = _pixAPIContext.Usuario
                     .FirstOrDefault(e => e.id == id) 
-                        ?? throw new BadRequestException("Usuário não encontrado.");
+                    ?? throw new BadRequestException("Usuário não encontrado.");
 
                 if(usuario.isExcluido) throw new BadRequestException("O usuário está desativado.");
 

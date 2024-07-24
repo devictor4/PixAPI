@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using PixAPI.Business.DTOs.Login;
 using PixAPI.Business.Exceptions;
+using PixAPI.Business.Util;
 using PixAPI.Repository.Context;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,16 +13,13 @@ namespace PixAPI.Business.Services
     public class LoginService
     {
         private readonly PixAPIContext _pixAPIContext;
-        private readonly IConfiguration _configuration;
 
-        public LoginService(PixAPIContext pixAPIContext,
-            IConfiguration configuration)
+        public LoginService(PixAPIContext pixAPIContext)
         {
             _pixAPIContext = pixAPIContext;
-            _configuration = configuration;
         }
 
-        public string Login(string? email, string? documento, string senha)
+        public TokenAuthDTO Login(string? email, string? documento, string senha)
         {
             if (string.IsNullOrWhiteSpace(email)
                 && string.IsNullOrWhiteSpace(documento)) throw new BadRequestException("É necessário informar os dados de Login.");
@@ -29,23 +28,29 @@ namespace PixAPI.Business.Services
                 .FirstOrDefault(e => !e.isExcluido 
                     && (!string.IsNullOrWhiteSpace(email) && e.email.Equals(email)
                     || !string.IsNullOrWhiteSpace(documento) && e.documento.Equals(documento)))
-                        ?? throw new BadRequestException($"E-mail ou Documento inválido.");
+                ?? throw new UnauthorizedException("E-mail ou Documento inválido.");
 
             if (!BCrypt.Net.BCrypt.Verify(senha, usuario.senha)) 
-                throw new BadRequestException($"Senha inválida.");
+                throw new UnauthorizedException("Senha inválida.");
 
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Settings.SECRET));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var tokenExpires = DateTime.Now.AddMinutes(10);
 
-            var tokeOptions = new JwtSecurityToken(
-                issuer: _configuration["JWT:Issuer"],
-                audience: _configuration["JWT:Audience"],
+            var tokenOptions = new JwtSecurityToken(
+                issuer: Settings.ISSUER,
+                audience: Settings.AUDIENCE,
                 claims: new List<Claim>(),
-                expires: DateTime.Now.AddMinutes(10),
+                expires: tokenExpires,
                 signingCredentials: signinCredentials
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+            return new TokenAuthDTO()
+            {
+                Criacao = DateTime.Now,
+                Expiracao = tokenExpires,
+                Token = new JwtSecurityTokenHandler().WriteToken(tokenOptions),
+            };
         }
     }
 }
