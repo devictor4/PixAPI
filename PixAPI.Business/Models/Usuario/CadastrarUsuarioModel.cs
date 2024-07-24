@@ -1,6 +1,6 @@
 ﻿namespace PixAPI.Business.Models.Usuario
 {
-    public class CadastroModel : DocumentoModel
+    public class CadastrarUsuarioModel : DocumentoModel
     {
         public string Email { get; set; }
         public string Senha { get; set; }

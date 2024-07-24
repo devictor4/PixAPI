@@ -5,7 +5,6 @@ namespace PixAPI.Business.DTOs.Usuarios
 {
     public class UsuarioDTO
     {
-        public long ID { get; set; }
         public string Email { get; set; }
         public string Nome { get; set; }
         public TipoDocumento TipoDocumento { get; set; }
@@ -24,7 +23,6 @@ namespace PixAPI.Business.DTOs.Usuarios
 
         public UsuarioDTO(Usuario usuario)
         {
-            ID = usuario.id;
             Email = usuario.email;
             Nome = usuario?.nome ?? "";
             TipoDocumento = (TipoDocumento)usuario.tipoDocumento;

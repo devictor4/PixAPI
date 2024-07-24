@@ -15,7 +15,7 @@ namespace PixAPI.Business.Services
             _pixAPIContext = pixAPIContext;
         }
 
-        public List<UsuarioDTO>? ListarAtivos()
+        public List<UsuarioDTO>? Listar()
         {
             List<UsuarioDTO>? usuarios = new();
             try
@@ -35,7 +35,7 @@ namespace PixAPI.Business.Services
             return usuarios;
         }
 
-        public UsuarioDTO? BuscarAtivoPeloId(long id) =>
+        public UsuarioDTO? BuscarPeloId(long id) =>
             _pixAPIContext.Usuario.Where(e => e.id == id && (!e.isExcluido))
             .Select(e => new UsuarioDTO(e)).FirstOrDefault() 
             ?? throw new BadRequestException("Usuário não encontrado.");

@@ -15,17 +15,19 @@ namespace PixAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListarAtivos() =>
-            Ok(new { usuarios = _usuarioService.ListarAtivos() });
+        [Route("Listar")]
+        public IActionResult Listar() =>
+            Ok(new { usuarios = _usuarioService.Listar() });
 
         [HttpGet]
-        [Route("{id}")]
-        public IActionResult BuscarAtivoPeloId(long id) =>
-            Ok(new { usuario = _usuarioService.BuscarAtivoPeloId(id) });
+        [Route("Buscar/{id}")]
+        public IActionResult BuscarPeloId(long id) =>
+            Ok(new { usuario = _usuarioService.BuscarPeloId(id) });
 
         [HttpPost]
+        [Route("Cadastrar")]
         public IActionResult Cadastrar(
-            [FromBody] CadastroModel model) =>
+            [FromBody] CadastrarUsuarioModel model) =>
             Ok(new
             {
                 usuario = _usuarioService.Cadastrar(model.TipoDocumento, model.Documento, 
@@ -33,16 +35,17 @@ namespace PixAPI.Controllers
             });
 
         [HttpPut]
+        [Route("Alterar")]
         public IActionResult Alterar(
-            [FromBody] AlteracaoModel model) =>
+            [FromBody] AlterarUsuarioModel model) =>
             Ok(new
             {
                 usuario = _usuarioService.Alterar(model.TipoDocumento, model.Documento,
-                    model?.Email, model?.Nome,  model?.DDDCelular, model?.Celular)
+                    model?.Email, model?.Nome, model?.DDDCelular, model?.Celular)
             });
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("Desativar/{id}")]
         public IActionResult DesativarPeloid(long id) =>
             Ok(new { usuario = _usuarioService.DesativarPeloId(id) } );
     }

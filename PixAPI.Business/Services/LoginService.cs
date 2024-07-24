@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using PixAPI.Business.DTOs.Login;
 using PixAPI.Business.Exceptions;
 using PixAPI.Business.Util;

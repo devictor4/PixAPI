@@ -20,6 +20,7 @@ namespace PixAPI
             #region Services
             builder.Services.AddScoped<LoginService>();
             builder.Services.AddScoped<UsuarioService>();
+            builder.Services.AddScoped<ChavePixService>();
             #endregion
 
             return builder;

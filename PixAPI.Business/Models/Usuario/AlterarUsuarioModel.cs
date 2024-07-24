@@ -1,6 +1,6 @@
 ﻿namespace PixAPI.Business.Models.Usuario
 {
-    public class AlteracaoModel : DocumentoModel
+    public class AlterarUsuarioModel : DocumentoModel
     {
         public string? Email { get; set; }
         public string? Nome { get; set; }
