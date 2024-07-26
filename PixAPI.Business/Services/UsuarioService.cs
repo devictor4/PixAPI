@@ -35,7 +35,7 @@ namespace PixAPI.Business.Services
             return usuarios;
         }
 
-        public UsuarioDTO? BuscarPeloId(long id) =>
+        public UsuarioDTO BuscarPeloId(long id) =>
             _pixAPIContext.Usuario.Where(e => e.id == id && (!e.isExcluido))
             .Select(e => new UsuarioDTO(e)).FirstOrDefault() 
             ?? throw new BadRequestException("Usuário não encontrado.");
@@ -86,7 +86,7 @@ namespace PixAPI.Business.Services
                 if (string.IsNullOrWhiteSpace(documento))
                     throw new BadRequestException("O documento é obrigatório.");
 
-                Usuario? usuario = _pixAPIContext.Usuario
+                Usuario usuario = _pixAPIContext.Usuario
                     .FirstOrDefault(e => e.tipoDocumento == tipoDocumento.GetHashCode()
                         && e.documento.Equals(documento))
                     ?? throw new BadRequestException("Usuário não encontrado.");
@@ -113,7 +113,7 @@ namespace PixAPI.Business.Services
         {
             try
             {
-                Usuario? usuario = _pixAPIContext.Usuario
+                Usuario usuario = _pixAPIContext.Usuario
                     .FirstOrDefault(e => e.id == id) 
                     ?? throw new BadRequestException("Usuário não encontrado.");
 

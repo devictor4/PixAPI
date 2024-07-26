@@ -21,7 +21,7 @@ namespace PixAPI.Business.Services
 
         public ChavePixDTO Cadastrar(long idUsuario, TipoChave tipoChavePix, string chave) 
         {
-            UsuarioDTO? usuarioDTO = _usuarioService.BuscarPeloId(idUsuario);
+            UsuarioDTO usuarioDTO = _usuarioService.BuscarPeloId(idUsuario);
 
             ChavePix chavePix = new()
             {
@@ -45,8 +45,8 @@ namespace PixAPI.Business.Services
 
             return new ChavePixDTO()
             {
-                Nome = usuarioDTO?.Nome,
-                Documento = usuarioDTO?.Documento,
+                Nome = usuarioDTO.Nome,
+                Documento = usuarioDTO.Documento,
                 Tipo = Utilities.GetEnumDescription(tipoChavePix),
                 Chave = chave
             };
